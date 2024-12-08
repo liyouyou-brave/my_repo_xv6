@@ -10,6 +10,7 @@ fmtname(char *path)
   char *p;
 
   // Find first character after last slash.
+  // 找到上一个"/"
   for(p=path+strlen(path); p >= path && *p != '/'; p--)
     ;
   p++;
