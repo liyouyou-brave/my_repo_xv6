@@ -5,53 +5,39 @@
 #define DEBUG 1
 
 // #define debug(codes) if(DEBUG) {codes;}
-
-int 
-readline(char** new_argv, int cur) {
-    char buf[1024];
+char*
+readline()
+{
+    char* buf = malloc(1024);
     int n = 0;
     while (read(0, buf + n, 1)) {
-        if (buf[n] == '\n') {
+        if (buf[n] == '\n' || buf[n] == '\0') {
+            buf[n] = '\0';
             break;
         }
         n++;
-    }
-    buf[n] = 0;
-    if (n == 0) 
+    }   
+    if (n == 0) {
+        free(buf);
         return 0;
-    int offset = 0;
-    while (offset < n) {
-        new_argv[cur] = buf + offset;
-        while (buf[offset] != ' ' && offset < n) {
-            offset++;
-        }
-        while (buf[offset] == ' ' && offset < n) {
-            offset++;
-        }
-        cur++;
     }
-    return cur;
+    return buf;
 }
-
-
 int
-main(int argc, char* argv[])
+main(int argc, char const *argv[])
 {
-    // debug(printf("argc: %d\targv[0]: %s\targv[1]: %s\targv[2]: %s\n", argc, argv[0], argv[1], argv[2]))
-    
     char* cmd = malloc(strlen(argv[1]) + 1);
     strcpy(cmd, argv[1]);
     char* new_argv[MAXARG];
-    // printf("%s\n", cmd);
+    int new_argc = argc;
     for (int i = 1; i < argc; i++) {
-        new_argv[i - 1] = malloc(sizeof(argv[i]) + 1);
+        new_argv[i - 1] = malloc(strlen(argv[i]) + 1);
         strcpy(new_argv[i - 1], argv[i]);
-        // printf(new_argv[i - 1]);
     }
-    int new_argc = argc - 1;
-    int cur_argc;
-    while ((cur_argc = readline(new_argv, new_argc)) != 0) {
-        new_argv[cur_argc] = 0;
+    char* new_buf;
+    while ((new_buf = readline()) != 0) {
+        new_argv[new_argc - 1] = malloc(strlen(new_buf));
+        strcpy(new_argv[new_argc - 1], new_buf);
         if (fork() == 0) {
             exec(cmd, new_argv);
         }
@@ -59,7 +45,8 @@ main(int argc, char* argv[])
             wait(0);
         }
     }
-    
+    free(cmd);
+    free(new_argv);
     exit(0);
     return 0;
 }
