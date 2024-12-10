@@ -11,6 +11,10 @@ readline()
     char* buf = malloc(1024);
     int n = 0;
     while (read(0, buf + n, 1)) {
+        if (n >= 1023) {
+            printf("argument too long\n");
+            exit(0);
+        }
         if (buf[n] == '\n' || buf[n] == '\0') {
             buf[n] = '\0';
             break;

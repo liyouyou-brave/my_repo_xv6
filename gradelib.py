@@ -595,7 +595,9 @@ def shell_script(script, terminate_match=None):
             buf = bytearray()
         def handle_output(output):
             context.buf.extend(output)
+            
             if terminate_match is not None:
+                # terminate_match 识别不出来，导致不能及时raise TerminateTest
                 if re.match(terminate_match, context.buf.decode('utf-8', 'replace')):
                     raise TerminateTest
             if b'$ ' in context.buf:

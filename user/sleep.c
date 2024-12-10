@@ -15,7 +15,7 @@ main(int argc, char* argv[])
         printf("sleep time should bigger than zero\n");
         exit(1);
     }
-    sleep(sleep_time * 10);
+    sleep(sleep_time);
     exit(0);
     return 0;
 }
