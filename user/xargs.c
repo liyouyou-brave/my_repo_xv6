@@ -34,7 +34,8 @@ main(int argc, char const *argv[])
     strcpy(cmd, argv[1]);
     char* new_argv[MAXARG];
     int new_argc = argc;
-    for (int i = 1; i < argc; i++) {
+    int i;
+    for (i = 1; i < argc; i++) {
         new_argv[i - 1] = malloc(strlen(argv[i]) + 1);
         strcpy(new_argv[i - 1], argv[i]);
     }
